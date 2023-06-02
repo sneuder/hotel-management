@@ -62,7 +62,7 @@ export class RoomService {
       { new: true },
     );
 
-    this.roomExists(cancelRoom);
+    return this.roomExists(cancelRoom);
   }
 
   // handler exception

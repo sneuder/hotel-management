@@ -1,16 +1,22 @@
 import { GraphQLScalarType, Kind } from 'graphql';
 
+const regexId = /^([TVC])[1-9][0-9]{2}$/;
+
+const checkId = (value) => {
+  return regexId.test(value);
+};
+
 const RoomIDScalar = new GraphQLScalarType({
   name: 'RoomID',
-  description: 'Custom ID for roomId: [CTV][123]{3}',
+  description: 'Custom ID for roomId: [CTV][1-9][0-0]{2}',
   parseValue(value: string) {
-    if (!/^([TVC])[1-9]{3}$/.test(value)) {
+    if (!checkId(value)) {
       throw new Error('Invalid roomId format');
     }
     return value;
   },
   parseLiteral(ast) {
-    if (ast.kind !== Kind.STRING || !/^([TVC])[1-9]{3}$/.test(ast.value)) {
+    if (ast.kind !== Kind.STRING || !checkId(ast.value)) {
       throw new Error('Invalid roomId format');
     }
     return ast.value;

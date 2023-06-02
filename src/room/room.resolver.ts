@@ -7,7 +7,6 @@ import { RoomGuestName } from './dto/types/room-guest-name.type';
 import { RoomService } from './room.service';
 import { NewRoomInput } from './dto/inputs/new-room.input';
 import { UpdateRoomInput } from './dto/inputs/update-room.input';
-import { RoomExistsInterceptor } from './interceptors/room-exists.interceptor';
 import { RoomIdExistsInterceptor } from './interceptors/room-id-exists.interceptor';
 
 @Resolver()
