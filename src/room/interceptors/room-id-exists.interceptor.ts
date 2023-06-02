@@ -13,7 +13,7 @@ import { Room } from '../dto/room-schema';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class RoomExistsInterceptor implements NestInterceptor {
+export class RoomIdExistsInterceptor implements NestInterceptor {
   constructor(
     @InjectModel(Room.name) private readonly roomModel: Model<Room>,
   ) {}
@@ -27,9 +27,8 @@ export class RoomExistsInterceptor implements NestInterceptor {
     const roomId = gqlContext.getArgs().newRoom.roomId;
     const roomExists = await this.roomModel.exists({ roomId });
 
-    if (roomExists) return next.handle();
-    throw new ConflictException(
-      `The room with roomId (${roomId}) does not exists.`,
-    );
+    if (roomExists)
+      throw new ConflictException(`This roomId (${roomId}) already exists.`);
+    return next.handle();
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Room } from './dto/room-schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,10 +15,8 @@ export class RoomService {
     return this.roomModel.find();
   }
 
-  async getOne(roomId: string): Promise<Room> {
-    const room = await this.roomModel.findOne({ roomId });
-    if (!room) throw new NotFoundException('Room not found');
-    return room;
+  getOne(roomId: string): Promise<Room> {
+    return this.roomModel.findOne({ roomId });
   }
 
   async createOne(newRoom: NewRoomInput) {

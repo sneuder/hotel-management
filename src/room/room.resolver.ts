@@ -6,8 +6,9 @@ import { RoomID } from './dto/types/room-id.type';
 import { RoomGuestName } from './dto/types/room-guest-name.type';
 import { RoomService } from './room.service';
 import { NewRoomInput } from './dto/inputs/new-room.input';
-
+import { UpdateRoomInput } from './dto/inputs/update-room.input';
 import { RoomExistsInterceptor } from './interceptors/room-exists.interceptor';
+import { RoomIdExistsInterceptor } from './interceptors/room-id-exists.interceptor';
 
 @Resolver()
 export class RoomResolver {
@@ -18,6 +19,7 @@ export class RoomResolver {
     return this.roomService.getAll();
   }
 
+  @UseInterceptors(RoomExistsInterceptor)
   @Query(() => Room, { name: 'room' })
   getOneRoom(
     @Args('roomId', { type: () => RoomID }) roomId: string,
@@ -25,7 +27,7 @@ export class RoomResolver {
     return this.roomService.getOne(roomId);
   }
 
-  @UseInterceptors(RoomExistsInterceptor)
+  @UseInterceptors(RoomIdExistsInterceptor)
   @Mutation(() => Room, { name: 'createRoom' })
   createOneRoom(
     @Args('newRoom', { type: () => NewRoomInput }) newRoom: NewRoomInput,
@@ -33,15 +35,17 @@ export class RoomResolver {
     return this.roomService.createOne(newRoom);
   }
 
-  @Mutation(() => Room, { name: 'updateOrBookRoom' })
+  @UseInterceptors(RoomExistsInterceptor)
+  @Mutation(() => Room, { name: 'updateRoom' })
   updateOneRoom(
     @Args('roomId', { type: () => RoomID }) roomId: string,
-    @Args('updateOneRoom', { type: () => NewRoomInput })
+    @Args('roomToUpdate', { type: () => UpdateRoomInput })
     roomToUpdate: NewRoomInput,
   ) {
     return this.roomService.updateOne(roomId, roomToUpdate);
   }
 
+  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'removeRoom' })
   @UseFilters()
   removeOneRoom(@Args('roomId', { type: () => RoomID }) roomId: string) {
@@ -50,6 +54,7 @@ export class RoomResolver {
 
   // advanced mutations
 
+  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'bookRoom' })
   bookOneRoom(
     @Args('roomId', { type: () => RoomID }) roomId: string,
@@ -58,6 +63,7 @@ export class RoomResolver {
     return this.roomService.bookOne(roomId, guestName);
   }
 
+  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'cancelRoom' })
   cancelOneRoom(@Args('roomId', { type: () => RoomID }) roomId: string) {
     return this.roomService.cancelOne(roomId);

@@ -31,14 +31,19 @@ type Query {
 
 type Mutation {
   createRoom(newRoom: NewRoomInput!): Room!
-  updateOrBookRoom(roomId: RoomID!, updateOneRoom: NewRoomInput!): Room!
+  updateRoom(roomId: RoomID!, roomToUpdate: UpdateRoomInput!): Room!
   removeRoom(roomId: RoomID!): Room!
   bookRoom(roomId: RoomID!, guestName: GuestName!): Room!
   cancelRoom(roomId: RoomID!): Room!
 }
 
 input NewRoomInput {
+  guestName: GuestName
+  state: StateRoomEnum!
   roomId: RoomID!
+}
+
+input UpdateRoomInput {
   guestName: GuestName
   state: StateRoomEnum!
 }
