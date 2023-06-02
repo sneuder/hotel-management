@@ -2,9 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { RoomResolver } from './room.resolver';
 import { RoomService } from './room.service';
-
 import { MongooseModule } from '@nestjs/mongoose';
-import { Room, RoomSchema } from './room-schema';
+import { Room, RoomSchema } from './dto/room-schema';
 
 @Module({
   imports: [

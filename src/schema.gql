@@ -3,11 +3,14 @@
 # ------------------------------------------------------
 
 type Room {
-  roomId: String!
+  roomId: RoomID!
   guestName: String!
   lastChanged: DateTime!
   state: StateRoomEnum!
 }
+
+"""Custom ID for roomId"""
+scalar RoomID
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
@@ -21,7 +24,7 @@ enum StateRoomEnum {
 
 type Query {
   rooms: [Room!]!
-  room(roomId: String!): Room!
+  room(roomId: RoomID!): Room!
 }
 
 type Mutation {
@@ -31,6 +34,7 @@ type Mutation {
 }
 
 input NewRoomInput {
+  roomId: RoomID!
   guestName: String
   state: StateRoomEnum!
 }

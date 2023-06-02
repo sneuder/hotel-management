@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+
+import { Room } from './dto/room-schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Room } from './room-schema';
 import { Model } from 'mongoose';
-import { NewRoomInput } from './dto/new-room.input';
 import { StateRoomEnum } from './dto/state-room.enum';
+import { NewRoomInput } from './dto/new-room.input';
 
 @Injectable()
 export class RoomService {
@@ -16,11 +17,11 @@ export class RoomService {
   }
 
   getOne(roomId: string): Promise<Room> {
-    return this.roomModel.findById(roomId);
+    return this.roomModel.findOne({ roomId });
   }
 
   createOne(newRoom: NewRoomInput) {
-    if (!newRoom.guestName) this.roomModel.create(newRoom);
+    if (!newRoom.guestName) return this.roomModel.create(newRoom);
     newRoom.state = StateRoomEnum.OCCUPIED;
     return this.roomModel.create(newRoom);
   }
@@ -28,8 +29,6 @@ export class RoomService {
   updateOne(roomId: string, updateBookRoom: NewRoomInput) {
     return this.roomModel.findOneAndUpdate({ roomId }, updateBookRoom);
   }
-
-  // updateAsAdmin() {}
 
   removeOne(roomId: string) {
     return this.roomModel.findOneAndRemove({ roomId });

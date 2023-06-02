@@ -1,16 +1,18 @@
 import { ObjectType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { StateRoomEnum } from './dto/state-room.enum';
+
+import { StateRoomEnum } from './state-room.enum';
+import { RoomID } from './room-id.type';
 
 @Schema()
 @ObjectType()
 export class Room {
-  @Prop({ required: true })
-  @Field()
+  @Prop()
+  @Field(() => RoomID)
   roomId: string;
 
-  @Prop()
+  @Prop({ type: String })
   @Field()
   guestName: string;
 
@@ -25,3 +27,8 @@ export class Room {
 
 export type RoomDocument = HydratedDocument<Room>;
 export const RoomSchema = SchemaFactory.createForClass(Room);
+
+// RoomSchema.pre<Room>('save', function (next) {
+//   if (this.roomId) next();
+//   this.roomId = 'asas';
+// });

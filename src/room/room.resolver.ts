@@ -1,7 +1,11 @@
 import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
+import { UseFilters } from '@nestjs/common';
+
+import { Room } from './dto/room-schema';
+import { RoomID } from './dto/room-id.type';
 import { RoomService } from './room.service';
-import { Room } from './room-schema';
 import { NewRoomInput } from './dto/new-room.input';
+
 @Resolver()
 export class RoomResolver {
   constructor(private readonly roomService: RoomService) {}
@@ -13,7 +17,7 @@ export class RoomResolver {
 
   @Query(() => Room, { name: 'room' })
   getOneRoom(
-    @Args('roomId', { type: () => String }) roomId: string,
+    @Args('roomId', { type: () => RoomID }) roomId: string,
   ): Promise<Room> {
     return this.roomService.getOne(roomId);
   }
@@ -35,6 +39,7 @@ export class RoomResolver {
   }
 
   @Mutation(() => Room, { name: 'removeRoom' })
+  @UseFilters()
   removeOneRoom(@Args('roomId', { type: () => String }) roomId: string) {
     return this.roomService.removeOne(roomId);
   }
