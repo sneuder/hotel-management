@@ -6,9 +6,6 @@ import { RoomService } from './room.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Room, RoomSchema } from './dto/room-schema';
 
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { RoomCreateInterceptor } from './interceptors/room-create.interceptor';
-
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -18,13 +15,6 @@ import { RoomCreateInterceptor } from './interceptors/room-create.interceptor';
       },
     ]),
   ],
-  providers: [
-    RoomResolver,
-    RoomService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: RoomCreateInterceptor,
-    },
-  ],
+  providers: [RoomResolver, RoomService],
 })
 export class RoomModule {}

@@ -2,7 +2,7 @@ import { GraphQLScalarType, Kind } from 'graphql';
 
 const RoomIDScalar = new GraphQLScalarType({
   name: 'RoomID',
-  description: 'Custom ID for roomId',
+  description: 'Custom ID for roomId: [CTV][123]{3}',
   parseValue(value: string) {
     if (!/^([TVC])[1-9]{3}$/.test(value)) {
       throw new Error('Invalid roomId format');

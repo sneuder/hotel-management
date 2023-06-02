@@ -4,13 +4,15 @@
 
 type Room {
   roomId: RoomID!
-  guestName: String
+  guestName: GuestName
   lastChanged: DateTime!
   state: StateRoomEnum!
 }
 
-"""Custom ID for roomId"""
+"""Custom ID for roomId: [CTV][123]{3}"""
 scalar RoomID
+
+scalar GuestName
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
@@ -29,12 +31,14 @@ type Query {
 
 type Mutation {
   createRoom(newRoom: NewRoomInput!): Room!
-  updateOrBookRoom(roomId: String!, updateOneRoom: NewRoomInput!): Room!
-  removeRoom(roomId: String!): Room!
+  updateOrBookRoom(roomId: RoomID!, updateOneRoom: NewRoomInput!): Room!
+  removeRoom(roomId: RoomID!): Room!
+  bookRoom(roomId: RoomID!, guestName: GuestName!): Room!
+  cancelRoom(roomId: RoomID!): Room!
 }
 
 input NewRoomInput {
   roomId: RoomID!
-  guestName: String
+  guestName: GuestName
   state: StateRoomEnum!
 }

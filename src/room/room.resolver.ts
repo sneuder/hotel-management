@@ -2,10 +2,12 @@ import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
 import { UseFilters, UseInterceptors } from '@nestjs/common';
 
 import { Room } from './dto/room-schema';
-import { RoomID } from './dto/room-id.type';
+import { RoomID } from './dto/types/room-id.type';
+import { RoomGuestName } from './dto/types/room-guest-name.type';
 import { RoomService } from './room.service';
-import { NewRoomInput } from './dto/new-room.input';
-import { RoomCreateInterceptor } from './interceptors/room-create.interceptor';
+import { NewRoomInput } from './dto/inputs/new-room.input';
+
+import { RoomExistsInterceptor } from './interceptors/room-exists.interceptor';
 
 @Resolver()
 export class RoomResolver {
@@ -23,7 +25,7 @@ export class RoomResolver {
     return this.roomService.getOne(roomId);
   }
 
-  @UseInterceptors(RoomCreateInterceptor)
+  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'createRoom' })
   createOneRoom(
     @Args('newRoom', { type: () => NewRoomInput }) newRoom: NewRoomInput,
@@ -33,7 +35,7 @@ export class RoomResolver {
 
   @Mutation(() => Room, { name: 'updateOrBookRoom' })
   updateOneRoom(
-    @Args('roomId', { type: () => String }) roomId: string,
+    @Args('roomId', { type: () => RoomID }) roomId: string,
     @Args('updateOneRoom', { type: () => NewRoomInput })
     roomToUpdate: NewRoomInput,
   ) {
@@ -42,9 +44,22 @@ export class RoomResolver {
 
   @Mutation(() => Room, { name: 'removeRoom' })
   @UseFilters()
-  removeOneRoom(@Args('roomId', { type: () => String }) roomId: string) {
+  removeOneRoom(@Args('roomId', { type: () => RoomID }) roomId: string) {
     return this.roomService.removeOne(roomId);
   }
 
   // advanced mutations
+
+  @Mutation(() => Room, { name: 'bookRoom' })
+  bookOneRoom(
+    @Args('roomId', { type: () => RoomID }) roomId: string,
+    @Args('guestName', { type: () => RoomGuestName }) guestName: string,
+  ) {
+    return this.roomService.bookOne(roomId, guestName);
+  }
+
+  @Mutation(() => Room, { name: 'cancelRoom' })
+  cancelOneRoom(@Args('roomId', { type: () => RoomID }) roomId: string) {
+    return this.roomService.cancelOne(roomId);
+  }
 }

@@ -3,7 +3,8 @@ import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { StateRoomEnum } from './state-room.enum';
-import { RoomID } from './room-id.type';
+import { RoomID } from './types/room-id.type';
+import { RoomGuestName } from './types/room-guest-name.type';
 
 @Schema()
 @ObjectType()
@@ -13,7 +14,7 @@ export class Room {
   roomId: string;
 
   @Prop({ required: false, type: String })
-  @Field({ nullable: true })
+  @Field(() => RoomGuestName, { nullable: true })
   guestName: string;
 
   @Prop({ default: () => new Date() })
@@ -27,8 +28,3 @@ export class Room {
 
 export type RoomDocument = HydratedDocument<Room>;
 export const RoomSchema = SchemaFactory.createForClass(Room);
-
-// RoomSchema.pre<Room>('save', function (next) {
-//   if (this.roomId) next();
-//   this.roomId = 'asas';
-// });
