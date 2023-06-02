@@ -21,7 +21,7 @@ export class RoomIdExistsInterceptor implements NestInterceptor {
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Promise<Observable<any>> {
+  ): Promise<Observable<CallHandler>> {
     const gqlContext = GqlExecutionContext.create(context);
 
     const roomId = gqlContext.getArgs().newRoom.roomId;

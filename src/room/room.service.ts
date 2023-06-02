@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Room } from './dto/room-schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,30 +15,34 @@ export class RoomService {
     return this.roomModel.find();
   }
 
-  getOne(roomId: string): Promise<Room> {
-    return this.roomModel.findOne({ roomId });
+  async getOne(roomId: string): Promise<Room> {
+    const foundRoom = await this.roomModel.findOne({ roomId });
+    return this.roomExists(foundRoom);
   }
 
   async createOne(newRoom: NewRoomInput) {
     return this.roomModel.create(newRoom);
   }
 
-  updateOne(roomId: string, updateRoom: NewRoomInput) {
-    return this.roomModel.findOneAndUpdate(
+  async updateOne(roomId: string, updateRoom: NewRoomInput) {
+    const updatedRoom = await this.roomModel.findOneAndUpdate(
       { roomId },
       { lastChanged: new Date(), ...updateRoom },
       { new: true },
     );
+
+    return this.roomExists(updatedRoom);
   }
 
-  removeOne(roomId: string) {
-    return this.roomModel.findOneAndRemove({ roomId });
+  async removeOne(roomId: string) {
+    const removedRoom = await this.roomModel.findOneAndRemove({ roomId });
+    return this.roomExists(removedRoom);
   }
 
   // advanced services
 
-  bookOne(roomId: string, guestName: string): Promise<Room> {
-    return this.roomModel.findOneAndUpdate(
+  async bookOne(roomId: string, guestName: string): Promise<Room> {
+    const bookedRoom = await this.roomModel.findOneAndUpdate(
       { roomId },
       {
         guestName,
@@ -47,13 +51,23 @@ export class RoomService {
       },
       { new: true },
     );
+
+    return this.roomExists(bookedRoom);
   }
 
-  cancelOne(roomId: string) {
-    return this.roomModel.findOneAndUpdate(
+  async cancelOne(roomId: string) {
+    const cancelRoom = await this.roomModel.findOneAndUpdate(
       { roomId },
       { guestName: null, state: StateRoomEnum.FREE, lastChanged: new Date() },
       { new: true },
     );
+
+    this.roomExists(cancelRoom);
+  }
+
+  // handler exception
+  roomExists(room: Room): Room {
+    if (room) return room;
+    throw new NotFoundException('This room was not found');
   }
 }

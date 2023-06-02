@@ -19,7 +19,6 @@ export class RoomResolver {
     return this.roomService.getAll();
   }
 
-  @UseInterceptors(RoomExistsInterceptor)
   @Query(() => Room, { name: 'room' })
   getOneRoom(
     @Args('roomId', { type: () => RoomID }) roomId: string,
@@ -35,7 +34,6 @@ export class RoomResolver {
     return this.roomService.createOne(newRoom);
   }
 
-  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'updateRoom' })
   updateOneRoom(
     @Args('roomId', { type: () => RoomID }) roomId: string,
@@ -45,7 +43,6 @@ export class RoomResolver {
     return this.roomService.updateOne(roomId, roomToUpdate);
   }
 
-  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'removeRoom' })
   @UseFilters()
   removeOneRoom(@Args('roomId', { type: () => RoomID }) roomId: string) {
@@ -54,7 +51,6 @@ export class RoomResolver {
 
   // advanced mutations
 
-  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'bookRoom' })
   bookOneRoom(
     @Args('roomId', { type: () => RoomID }) roomId: string,
@@ -63,7 +59,6 @@ export class RoomResolver {
     return this.roomService.bookOne(roomId, guestName);
   }
 
-  @UseInterceptors(RoomExistsInterceptor)
   @Mutation(() => Room, { name: 'cancelRoom' })
   cancelOneRoom(@Args('roomId', { type: () => RoomID }) roomId: string) {
     return this.roomService.cancelOne(roomId);
