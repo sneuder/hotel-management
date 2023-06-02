@@ -8,12 +8,12 @@ import { RoomID } from './room-id.type';
 @Schema()
 @ObjectType()
 export class Room {
-  @Prop()
+  @Prop({ unique: true })
   @Field(() => RoomID)
   roomId: string;
 
-  @Prop({ type: String })
-  @Field()
+  @Prop({ required: false, type: String })
+  @Field({ nullable: true })
   guestName: string;
 
   @Prop({ default: () => new Date() })

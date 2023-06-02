@@ -1,10 +1,11 @@
 import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseInterceptors } from '@nestjs/common';
 
 import { Room } from './dto/room-schema';
 import { RoomID } from './dto/room-id.type';
 import { RoomService } from './room.service';
 import { NewRoomInput } from './dto/new-room.input';
+import { RoomCreateInterceptor } from './interceptors/room-create.interceptor';
 
 @Resolver()
 export class RoomResolver {
@@ -22,6 +23,7 @@ export class RoomResolver {
     return this.roomService.getOne(roomId);
   }
 
+  @UseInterceptors(RoomCreateInterceptor)
   @Mutation(() => Room, { name: 'createRoom' })
   createOneRoom(
     @Args('newRoom', { type: () => NewRoomInput }) newRoom: NewRoomInput,
@@ -30,12 +32,12 @@ export class RoomResolver {
   }
 
   @Mutation(() => Room, { name: 'updateOrBookRoom' })
-  updateOrBookOneRoom(
+  updateOneRoom(
     @Args('roomId', { type: () => String }) roomId: string,
-    @Args('updateBookRoom', { type: () => NewRoomInput })
-    updateBookRoom: NewRoomInput,
+    @Args('updateOneRoom', { type: () => NewRoomInput })
+    roomToUpdate: NewRoomInput,
   ) {
-    return this.roomService.updateOne(roomId, updateBookRoom);
+    return this.roomService.updateOne(roomId, roomToUpdate);
   }
 
   @Mutation(() => Room, { name: 'removeRoom' })
@@ -43,4 +45,6 @@ export class RoomResolver {
   removeOneRoom(@Args('roomId', { type: () => String }) roomId: string) {
     return this.roomService.removeOne(roomId);
   }
+
+  // advanced mutations
 }

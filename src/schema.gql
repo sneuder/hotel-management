@@ -4,7 +4,7 @@
 
 type Room {
   roomId: RoomID!
-  guestName: String!
+  guestName: String
   lastChanged: DateTime!
   state: StateRoomEnum!
 }
@@ -29,7 +29,7 @@ type Query {
 
 type Mutation {
   createRoom(newRoom: NewRoomInput!): Room!
-  updateOrBookRoom(roomId: String!, updateBookRoom: NewRoomInput!): Room!
+  updateOrBookRoom(roomId: String!, updateOneRoom: NewRoomInput!): Room!
   removeRoom(roomId: String!): Room!
 }
 

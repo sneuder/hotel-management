@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 
 import { Room } from './dto/room-schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,18 +20,18 @@ export class RoomService {
     return this.roomModel.find();
   }
 
-  getOne(roomId: string): Promise<Room> {
-    return this.roomModel.findOne({ roomId });
+  async getOne(roomId: string): Promise<Room> {
+    const room = await this.roomModel.findOne({ roomId });
+    if (!room) throw new NotFoundException('Room not found');
+    return room;
   }
 
-  createOne(newRoom: NewRoomInput) {
-    if (!newRoom.guestName) return this.roomModel.create(newRoom);
-    newRoom.state = StateRoomEnum.OCCUPIED;
+  async createOne(newRoom: NewRoomInput) {
     return this.roomModel.create(newRoom);
   }
 
-  updateOne(roomId: string, updateBookRoom: NewRoomInput) {
-    return this.roomModel.findOneAndUpdate({ roomId }, updateBookRoom);
+  updateOne(roomId: string, updateRoom: NewRoomInput) {
+    return this.roomModel.findOneAndUpdate({ roomId }, updateRoom);
   }
 
   removeOne(roomId: string) {
