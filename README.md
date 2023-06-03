@@ -22,4 +22,4 @@ Open a web browser and visit `http://localhost:3000/graphql` to access the Graph
 Here you can start use the GraphQL playground to test and interact with the API.
 
 ## Dependencies
-It is important to 
+It is important to have at least `node v16` for this project.
