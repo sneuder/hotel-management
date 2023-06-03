@@ -8,7 +8,7 @@ const checkId = (value) => {
 
 const RoomIDScalar = new GraphQLScalarType({
   name: 'RoomID',
-  description: 'Custom ID for roomId: [CTV][1-9][0-0]{2}',
+  description: 'Custom ID for roomId: [CTV][1-9][0-9]{2}',
   parseValue(value: string) {
     if (!checkId(value)) {
       throw new Error('Invalid roomId format');
