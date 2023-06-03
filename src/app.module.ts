@@ -7,6 +7,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 
+// the mongo-atlas-url is for a fast testing case
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
